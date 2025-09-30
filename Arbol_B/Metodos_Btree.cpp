@@ -3,6 +3,7 @@
 #include <fstream>
 #include "Estructura_nodo.cpp"
 #include <tuple>
+#include <math.h>
 
 
 std::tuple<Nodo,Nodo,Llave_valor> split(Nodo nodo_lleno){
@@ -231,7 +232,7 @@ int main() {
         return 1;
     }
 
-    int N = 350; // número de pares que esperas leer (ajusta según tu archivo)
+    int N = 1000; 
 
     std::vector<Nodo> btree = crearBtree(archivo, N);
 
@@ -250,7 +251,7 @@ int main() {
 
 
      // Rango a buscar
-    int l = 6, u = 15;
+    int l = 1546300800, u = l+ 604800;
 
     std::vector<Llave_valor> resultado = rangeSearch("btree_disco", l, u);
 
