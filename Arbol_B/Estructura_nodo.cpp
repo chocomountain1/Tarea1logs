@@ -8,7 +8,8 @@ constexpr int b = 340;
  *
  * Esta estructura almacena información a modo de un diccionario
  * incluyendo la llave (int) y valor (float).
- */
+**/
+
 typedef struct{
     int llave;
     float valor;
