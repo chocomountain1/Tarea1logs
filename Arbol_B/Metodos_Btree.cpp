@@ -140,13 +140,12 @@ std::vector<Nodo> crearBtree(std::ifstream &archivo, int N) {
 
     int contador = 0;
     Llave_valor lv;
-
+    
     // Leer N pares llave-valor desde el archivo
     while (contador < N && archivo.read(reinterpret_cast<char*>(&lv), sizeof(Llave_valor))) {
-        insert(btree, lv);  // 🔹 Aquí usamos la lógica de inserción que maneja splits, raíces, etc.
+        insert(btree, lv);  
         contador++;
     }
-
     return btree;
 }
 
@@ -171,7 +170,7 @@ Nodo leerNodo(std::ifstream &archivo, int idxNodo) {
     return nodo;
 }
 
-// Función recursiva usando archivo
+
 void rangeSearchRec(std::ifstream &archivo, int idxNodo, int l, int u, std::vector<Llave_valor> &resultado) {
     Nodo nodo = leerNodo(archivo, idxNodo);
 
@@ -232,7 +231,7 @@ int main() {
         return 1;
     }
 
-    int N = 1000; 
+    int N = 32768; 
 
     std::vector<Nodo> btree = crearBtree(archivo, N);
 
