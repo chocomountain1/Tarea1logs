@@ -11,8 +11,8 @@ struct Llave_valor {
 // Estructura para contabilizar IOs de operaciones en btree
 
 struct IOStats {
-    int lecturas = 0;
-    int escrituras = 0;
+    long long lecturas = 0;
+    long long escrituras = 0;
 };
 
 
