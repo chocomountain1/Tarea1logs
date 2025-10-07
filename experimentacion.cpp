@@ -41,7 +41,7 @@ int main() {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(l_min, l_max);  // distribución aleatoria para l
 
-    for (int i = 16; i < 20; i++) {
+    for (int i = 16; i < 27; i++) {
         std::cout << "Resultados con n:" << i << std::endl;
         int N = pow(2, i);
 
