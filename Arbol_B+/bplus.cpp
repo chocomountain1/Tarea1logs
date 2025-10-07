@@ -233,6 +233,7 @@ bool BPlusTree::save_to_file(const std::string& filename) const {
         out.write(reinterpret_cast<const char*>(&n), sizeof(BPNode));
         if (!out) return false;
     }
+    out.close();
     return true;
 }
 bool BPlusTree::load_from_file(const std::string& filename) {
