@@ -223,7 +223,7 @@ Nodo leerNodo(std::ifstream& archivo, int idxNodo, IOStats* io) {
     Nodo nodo;
     archivo.seekg(idxNodo * sizeof(Nodo), std::ios::beg);
     archivo.read(reinterpret_cast<char*>(&nodo), sizeof(Nodo));
-    io->escrituras++;  // escritura al variable nodo en RAM
+    io->lecturas++;  // escritura al variable nodo en RAM
     return nodo;
 }
 
@@ -231,13 +231,10 @@ Nodo leerNodo(std::ifstream& archivo, int idxNodo, IOStats* io) {
 void rangeSearchRec(std::ifstream& archivo, int idxNodo, int l, int u, std::vector<Llave_valor>& resultado, IOStats* io) {
     Nodo nodo = leerNodo(archivo, idxNodo, io);  // ya cuenta io.escrituras++
 
-    io->lecturas++;          // leer nodo.es_interno
     if (!nodo.es_interno) {  // hoja
         for (int i = 0; i < nodo.k; i++) {
-            io->lecturas++;  // leer llaves_valores[i].llave
             if (nodo.llaves_valores[i].llave >= l && nodo.llaves_valores[i].llave <= u) {
                 resultado.push_back(nodo.llaves_valores[i]);
-                io->escrituras++;  // agregar a resultado
             }
         }
         return;
@@ -245,32 +242,22 @@ void rangeSearchRec(std::ifstream& archivo, int idxNodo, int l, int u, std::vect
 
     // Nodo interno → recorrer hijos relevantes
     for (int j = 0; j <= nodo.k; j++) {
-        io->lecturas++;  // leer llaves_valores de comparación
         if (j == 0) {
-            io->lecturas++;
             if (l <= nodo.llaves_valores[0].llave)
                 rangeSearchRec(archivo, nodo.hijos[j], l, u, resultado, io);
-            io->lecturas++;  // leer hijo
         } else if (j == nodo.k) {
-            io->lecturas++;
             if (u >= nodo.llaves_valores[j - 1].llave)
                 rangeSearchRec(archivo, nodo.hijos[j], l, u, resultado, io);
-            io->lecturas++;
         } else {
-            io->lecturas++;
-            io->lecturas++;
             if (nodo.llaves_valores[j - 1].llave <= u && nodo.llaves_valores[j].llave >= l)
                 rangeSearchRec(archivo, nodo.hijos[j], l, u, resultado, io);
-            io->lecturas++;
         }
     }
 
     // Revisar llaves del nodo actual también
     for (int k = 0; k < nodo.k; k++) {
-        io->lecturas++;
         if (nodo.llaves_valores[k].llave >= l && nodo.llaves_valores[k].llave <= u) {
             resultado.push_back(nodo.llaves_valores[k]);
-            io->escrituras++;
         }
     }
 }
