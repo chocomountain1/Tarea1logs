@@ -21,43 +21,33 @@ void initNodo(Nodo& n) {
 }
 
 std::tuple<Nodo, Nodo, Llave_valor> split(const Nodo& nodo_lleno, IOStats* io) {
-    io->lecturas++;  // nodo_lleno.
     int k_total = nodo_lleno.k;
     int mid = k_total / 2;  // índice de la mediana: mid, usaremos mid en vez de b/2 o k_total para evitar segfault
     Llave_valor mediano = nodo_lleno.llaves_valores[mid];
-    io->lecturas++;  // acceso a la mediana
 
     Nodo nodo_izq, nodo_der;
     initNodo(nodo_izq);
     initNodo(nodo_der);
     nodo_izq.es_interno = nodo_lleno.es_interno;
-    io->lecturas++;
-    io->escrituras++;
     nodo_der.es_interno = nodo_lleno.es_interno;
-    io->lecturas++;
-    io->escrituras++;
 
     for (int i = 0; i < mid; ++i) {
-        io->lecturas++;                                             // leer nodo_lleno.llaves_valores[i]
         nodo_izq.llaves_valores[i] = nodo_lleno.llaves_valores[i];  // copiamos los pares a la izquierda del mediano
     }
     nodo_izq.k = mid;
 
     int right_count = 0;
     for (int i = mid + 1; i < k_total; ++i) {
-        io->lecturas++;
         nodo_der.llaves_valores[right_count++] = nodo_lleno.llaves_valores[i];  // copiamos los pares a la derecha en el nodo derecho
     }
     nodo_der.k = right_count;
 
     if (nodo_lleno.es_interno) {  // guardar los hijos solo si el nodo es interno
         for (int i = 0; i <= mid; ++i) {
-            io->lecturas++;
             nodo_izq.hijos[i] = nodo_lleno.hijos[i];
         }
         int idx = 0;
         for (int i = mid + 1; i <= k_total; ++i) {
-            io->lecturas++;
             nodo_der.hijos[idx++] = nodo_lleno.hijos[i];
         }
     }
