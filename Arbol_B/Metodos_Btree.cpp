@@ -5,15 +5,8 @@
 #include <tuple>
 #include <math.h>
 
-//Constantes globales para contabilizar la cantidad de I/Os de árbol B guardadas en una estructura
 
-struct IOStats
-{
-    int lecturas = 0;
-    int escrituras = 0;
-};
 
-IOStats io;
 //Función para inicializar un nodo (debido a que constantemente se utiliza el crear uno nuevo con campos predeterminados)
 void initNodo(Nodo &n) {
     n.k = 0;

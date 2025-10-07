@@ -1,13 +1,15 @@
 
-#include <vector>
 #include <tuple>
-#include "estructura_nodo.h" 
+#include <vector>
+
+#include "estructura_nodo.h"
+
 
 // Funciones auxiliares
 void initNodo(Nodo &n);
 std::tuple<Nodo, Nodo, Llave_valor> split(const Nodo &nodo_lleno);
-void insertNonFull(std::vector<Nodo>& btree, int idxNodo, Llave_valor par);
-void insert(std::vector<Nodo>& btree, Llave_valor par);
+void insertNonFull(std::vector<Nodo> &btree, int idxNodo, Llave_valor par);
+void insert(std::vector<Nodo> &btree, Llave_valor par);
 
 // Funciones principales
 std::vector<Nodo> crearBtree(std::ifstream &archivo, int N);

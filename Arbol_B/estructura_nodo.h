@@ -8,6 +8,16 @@ struct Llave_valor {
     float valor;
 } ;
 
+// Constantes globales para contabilizar la cantidad de I/Os de árbol B guardadas en una estructura
+
+struct IOStats {
+    int lecturas = 0;
+    int escrituras = 0;
+};
+
+IOStats io;
+
+
 struct Nodo {
     int es_interno;
     int k;
