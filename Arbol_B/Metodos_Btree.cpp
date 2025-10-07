@@ -139,12 +139,13 @@ void insert(std::vector<Nodo>& btree, Llave_valor par, IOStats* io) {
     int idxRaiz = 0;
 
     io->lecturas++;
-    if (btree[idxRaiz].k < b) {
+    Nodo raiz = btree[idxRaiz];
+
+    if (raiz.k < b) {
         insertNonFull(btree, idxRaiz, par, io);
     } else {
         // Si la raíz está llena, splitear la raíz y crear una nueva
-        auto [nodo_izq, nodo_der, mediano] = split(btree[idxRaiz], io);
-        io->lecturas++;  // lectura de la raíz
+        auto [nodo_izq, nodo_der, mediano] = split(raiz, io);
 
         int idxIzq = (int)btree.size();
         btree.push_back(nodo_izq);
@@ -156,22 +157,15 @@ void insert(std::vector<Nodo>& btree, Llave_valor par, IOStats* io) {
         Nodo nueva_raiz;
         initNodo(nueva_raiz);
         nueva_raiz.es_interno = 1;
-        io->escrituras++;
         nueva_raiz.k = 1;
-        io->escrituras++;
         nueva_raiz.llaves_valores[0] = mediano;
-        io->escrituras++;
         nueva_raiz.hijos[0] = idxIzq;
-        io->escrituras++;
         nueva_raiz.hijos[1] = idxDer;
-        io->escrituras++;
 
         // reemplazar la raíz antigua en la posición 0
         btree[idxRaiz] = nueva_raiz;
         io->escrituras++;
 
-        // insertar en el hijo correcto
-        io->lecturas++;
         if (par.llave <= mediano.llave)
             insertNonFull(btree, idxIzq, par, io);
         else
@@ -185,9 +179,7 @@ std::vector<Nodo> crearBtree(std::ifstream& archivo, int N, IOStats* io) {
     // inicializamos el árbol con un nodo raíz vacío
     Nodo raiz;
     raiz.k = 0;
-    io->escrituras++;
     raiz.es_interno = 0;
-    io->escrituras++;
     btree.push_back(raiz);
     io->escrituras++;
 
