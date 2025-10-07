@@ -29,26 +29,42 @@ int main() {
         std::cout << "Resultados con n:" << i << std::endl;
         int N = pow(2, i);
 
-        std::chrono::steady_clock::time_point begin;
+        std::chrono::steady_clock::time_point begin; // para ir registrando delta t
         std::chrono::steady_clock::time_point end;
 
-        int btree_creation_time;
+
+        // ------- datos pedidos por enunciado -------
+        int btree_creation_time; 
         int bptree_creation_time;
 
-        int btree_ios;
-        int bptree_ios;
+        IOStats btree_io_creation = {0, 0};
+        IOStats bptree_io_creation = {0, 0};
 
-        // B TREE
-        io.escrituras = 0;
-        io.lecturas = 0;
+        int btree_size = 0;
+        int bptree_size = 0;
+
+        int btree_avg_search_time; 
+        int bptree_avg_search_time;
+
+        IOStats btree_avg_io_search = {0, 0};
+        IOStats bptree_avg_io_search = {0, 0};
+
+
+        // ------- B TREE insert -------
+
+        IOStats btree_io = {0, 0}; // contabiliza ios totales
 
         archivo.seekg(0);  // puntero al comienzo del archivo
         begin = std::chrono::steady_clock::now();
-        std::vector<Nodo> btree = crearBtree(archivo, N);  // hace una copia?
+        std::vector<Nodo> btree = crearBtree(archivo, N, &btree_io);  // hace una copia?
         end = std::chrono::steady_clock::now();
-        btree_creation_time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 
-        // B+ TREE
+        btree_creation_time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+        btree_io_creation.escrituras = btree_io.escrituras;
+        btree_io_creation.lecturas = btree_io.lecturas;
+
+
+        // ------- B+ TREE insert -------
         BPlusTree bp_tree;
         int contador = 0;
         Llave_valor lv;
@@ -60,20 +76,28 @@ int main() {
             contador++;
         }
         end = std::chrono::steady_clock::now();
-        bptree_creation_time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-
-
-        std::cout << "Tiempo btree:" << btree_creation_time << std::endl;
-        std::cout << "IO Creacion btree:" << btree_creation_time << std::endl;
-
-        std::cout << "Tiempo bptree:" << bptree_creation_time << std::endl;
-        std::cout << "Tiempo bptree:" << bptree_creation_time << std::endl;
-
         
+        bptree_creation_time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+        bptree_io_creation.escrituras = bp_tree.io_writes();
+        bptree_io_creation.lecturas = bp_tree.io_reads();
+
+        // ------ Write trees to file ------
+
+        std::string btree_file = "data/btree_" + std::to_string(i+1) +".bin";
+        std::string bptree_file = "data/bptree_" + std::to_string(i+1) +".bin";
+
+        escribirBTreeADisco(btree, btree_file, nullptr); // no nos interesa contabilizar IOs
+        bp_tree.save_to_file(bptree_file);
+        
+
+        //  ------- SEARCH  -------
         // busqueda con dist. uniforme en rango l_min, l_max
         for (int k = 0; k < 50; k++) {
             int l = distrib(gen);
             int u = l + 604800;
+            begin = std::chrono::steady_clock::now();
+            end = std::chrono::steady_clock::now();
+
         }
     }
 
