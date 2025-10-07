@@ -44,4 +44,4 @@ tests: $(BP_BIN) $(B_BIN)
 
 # Limpiar binarios generados
 clean:
-	rm -f $(BP_BIN) $(B_BIN) $(EXP_BIN) pares.bin BP.bin btree_disco data/* *.o
+	rm -f $(BP_BIN) $(B_BIN) $(EXP_BIN) pares.bin BP.bin btree_disco data/* data_out.txt *.o
