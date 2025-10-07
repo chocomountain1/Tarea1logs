@@ -68,31 +68,29 @@ std::tuple<Nodo, Nodo, Llave_valor> split(const Nodo& nodo_lleno, IOStats* io) {
 // Función insertNonFull con conteo
 void insertNonFull(std::vector<Nodo>& btree, int idxNodo, Llave_valor par, IOStats* io) {
     io->lecturas++;  // leer btree[idxNodo].k
-    int i = btree[idxNodo].k - 1;
+    Nodo padre = btree[idxNodo];
+    int i = padre.k - 1;
 
-    io->lecturas++;
-    if (!btree[idxNodo].es_interno) {
-        while (i >= 0 && (io->lecturas++, btree[idxNodo].llaves_valores[i].llave) > par.llave) {
-            io->lecturas++;
-            io->escrituras++;
-            btree[idxNodo].llaves_valores[i + 1] = btree[idxNodo].llaves_valores[i];
+    if (!padre.es_interno) {
+        while (i >= 0 && (io->lecturas++, padre.llaves_valores[i].llave) > par.llave) {
+            padre.llaves_valores[i + 1] = padre.llaves_valores[i];
             --i;
         }
-        btree[idxNodo].llaves_valores[i + 1] = par;
-        io->escrituras++;
-        btree[idxNodo].k++;
+        padre.llaves_valores[i + 1] = par;
+        padre.k++;
+
+        btree[idxNodo] = padre;
         io->escrituras++;
         return;
     }
 
-    while (i >= 0 && (io->lecturas++, btree[idxNodo].llaves_valores[i].llave) > par.llave) --i;
+    while (i >= 0 && (io->lecturas++, padre.llaves_valores[i].llave) > par.llave) --i;
     ++i;
+    int idxHijo = padre.hijos[i];
+    Nodo hijo = btree[idxHijo];
     io->lecturas++;
-    int idxHijo = btree[idxNodo].hijos[i];
-
-    io->lecturas++;
-    if (btree[idxHijo].k >= b) {
-        auto [hijo_izq, hijo_der, mediano] = split(btree[idxHijo], io);
+    if (hijo.k >= b) {
+        auto [hijo_izq, hijo_der, mediano] = split(hijo, io);
 
         int idxIzq = idxHijo;
         int idxDer = (int)btree.size();
@@ -102,20 +100,16 @@ void insertNonFull(std::vector<Nodo>& btree, int idxNodo, Llave_valor par, IOSta
         btree.push_back(hijo_der);
         io->escrituras++;
 
-        int kpadre = btree[idxNodo].k;
+        int kpadre = padre.k;
         for (int j = kpadre; j > i; --j) {
-            io->lecturas++;
-            io->lecturas++;
-            io->escrituras++;
-            io->escrituras++;
-            btree[idxNodo].llaves_valores[j] = btree[idxNodo].llaves_valores[j - 1];
-            btree[idxNodo].hijos[j + 1] = btree[idxNodo].hijos[j];
+            padre.llaves_valores[j] = padre.llaves_valores[j - 1];
+            padre.hijos[j + 1] = padre.hijos[j];
         }
-        btree[idxNodo].llaves_valores[i] = mediano;
-        io->escrituras++;
-        btree[idxNodo].hijos[i + 1] = idxDer;
-        io->escrituras++;
-        btree[idxNodo].k++;
+        padre.llaves_valores[i] = mediano;
+        padre.hijos[i + 1] = idxDer;
+        padre.k++;
+
+        btree[idxNodo] = padre;
         io->escrituras++;
 
         if (par.llave <= mediano.llave) {
