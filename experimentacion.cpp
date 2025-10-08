@@ -20,6 +20,7 @@ int main() {
 
     std::ofstream out;
     out.open("data_out.txt");
+
     std::string columns[15] = {"n",
                                "b_creation_time", "bp_creation_time",
                                "b_creation_read", "b_creation_write", "bp_creation_read", "bp_creation_write",
@@ -40,6 +41,10 @@ int main() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(l_min, l_max);  // distribución aleatoria para l
+
+    // rango para probar con distintos N
+    int l_search_test = distrib(gen);
+    int u_search_test = l_search_test + 604800;
 
     for (int i = 16; i < 27; i++) {
         std::cout << "Resultados con n:" << i << std::endl;
@@ -131,8 +136,26 @@ int main() {
 
         bptree_avg_io_search.lecturas = bptree_avg_io_search.lecturas / 50;
 
-
-
+        if (i == 16) {
+            std::ofstream search_out;
+            search_out.open("search_data_16.txt");
+            search_out << "llave,valor\n";
+            std::vector<Llave_valor> res = rangeSearch(btree_file, l_search_test, u_search_test, &btree_avg_io_search);
+            for (int k = 0; k < res.size(); k++) {
+                search_out << res[k].llave << "," << res[k].valor << "\n";
+            }
+            search_out.close();
+        }
+        if (i == 22) {
+            std::ofstream search_out;
+            search_out.open("search_data_22.txt");
+            search_out << "llave,valor\n";
+            std::vector<Llave_valor> res = rangeSearch(btree_file, l_search_test, u_search_test, &btree_avg_io_search);
+            for (int k = 0; k < res.size(); k++) {
+                search_out << res[k].llave << "," << res[k].valor << "\n";
+            }
+            search_out.close();
+        }
         /* {"i",
          "b_creation_time", "bp_creation_time",
          "b_creation_read", "b_creation_write", "bp_creation_read", "bp_creation_write",

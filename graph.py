@@ -34,4 +34,12 @@ avg_search_io_df = avg_search_io_df.set_index("n")
 avg_search_io_df.plot()
 plt.savefig("plots/avg_search_ios.png")
 
-print(df)
+search_16_df = pd.read_csv("search_data_16.txt")
+search_16_df.plot.scatter(x="llave",y="valor", s=0.3)
+plt.title("Search n=16")
+plt.savefig("plots/search_16.png")
+
+search_22_df = pd.read_csv("search_data_22.txt")
+search_22_df.plot.scatter(x="llave",y="valor", s=0.3)
+plt.title("Search n=22")
+plt.savefig("plots/search_22.png")
