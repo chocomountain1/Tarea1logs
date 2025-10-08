@@ -10,4 +10,20 @@ Implementación en C++ de estructuras de datos **B-Tree** y **B+Tree** con sopor
 
 ## 📂 Estructura del proyecto
 
+Arbol_B: Carpeta con modulo de arbol B
+Arbol_B+: Carpeta  con modulo de arbol B+
+data: datos de experimentación
+plots: carpeta con graficos de graph.py
+
+requirimientos:
+
+C++17 para compilar y ejecutar arboles. 
+Python3, pandas y matplotlib para graficar con graph.py
+
 ## Como compilar
+
+compilar y ejecutar experimentacion:  
+make run
+
+graficar resultados:  
+python3 graph.py
